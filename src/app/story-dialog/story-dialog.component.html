@@ -1,0 +1,10 @@
+<div class="popup">
+    <div class="popup-content">
+        <h2>Select a Story</h2>
+        <ul>
+            <li *ngFor="let story of stories; let i = index">
+                <button (click)="selectStory(i)">{{ story.title }}</button>
+            </li>
+        </ul>
+    </div>
+</div>

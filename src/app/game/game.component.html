@@ -1,0 +1,86 @@
+<div class="container">
+    <div class="grid-container">
+        <div class="left-container">
+            <div class="word-category">
+                <h3>Adjectives</h3>
+                <div class="word-list adjectives">
+                    <div *ngFor="let adj of adjectives; let i = index" draggable="true" (dragstart)="onDragStart($event, adj, 'adjective')"
+                        [ngStyle]="{'background-color': '#ADD8E6', 'position': 'relative'}">
+                        {{ adj }}
+                        <span class="word-count-circle" *ngIf="adjectiveUsage[i] > 0">{{ adjectiveUsage[i] }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="word-category">
+                <h3>Nouns</h3>
+                <div class="word-list nouns">
+                    <div *ngFor="let noun of nouns; let i = index" draggable="true" (dragstart)="onDragStart($event, noun, 'noun')"
+                        [ngStyle]="{'background-color': '#F08080', 'position': 'relative'}">
+                        {{ noun }}
+                        <span class="word-count-circle" *ngIf="nounUsage[i] > 0">{{ nounUsage[i] }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="story">
+            <h2>Fill all Blanks to see your story:</h2>
+            <h2 class="title">{{ stories[selectedStoryIndex].title }}</h2>
+            <p>
+                <ng-container *ngFor="let blank of stories[selectedStoryIndex]?.blanks; let i = index">
+                <span [ngClass]="{'hidden-text': !isTextVisible}">{{ blank.text }}</span>
+                <span class="word-container" 
+                      *ngIf="userInputs[i] !== '______'; else blankTemplate"
+                      [ngClass]="{
+                        'filled-adjective': blank.type === 'adjective',
+                        'filled-noun': blank.type === 'noun',
+                        'filled-verb': blank.type === 'verb',
+                        'filled-adverb': blank.type === 'adverb'
+                      }">
+                    {{ userInputs[i] }}
+                    <button class="remove-btn" *ngIf="!isTextVisible" (click)="clearWord(i)">x</button>
+                </span>
+                <ng-template #blankTemplate>
+                    <span class="blank" (dragover)="onDragOver($event)" (drop)="onDrop($event, i, blank.type)" [ngClass]="blank.type + '-background'">______</span>
+                </ng-template>
+                </ng-container>
+            </p>
+            <span *ngIf="!isAllBlanksFilled()">
+                <button class="story-btn" (click)="toggleText()">{{ isTextVisible ? 'Hide Story' : 'Show Story' }}</button>
+            </span>
+
+            <span *ngIf="isAllBlanksFilled()">
+                <button class="choose-btn" (click)="openStoryDialog()">Choose another story</button>
+            </span>
+
+            <span *ngIf="isAllBlanksFilled()">
+                <button class="again-btn" (click)="resetGame()">Play Again</button>
+            </span>
+        </div>
+
+        <div class="right-container">
+            <div class="word-category">
+                <h3>Verbs</h3>
+                <div class="word-list verbs">
+                    <div *ngFor="let verb of verbs; let i = index" draggable="true" (dragstart)="onDragStart($event, verb, 'verb')"
+                        [ngStyle]="{'background-color': '#98FB98', 'position': 'relative'}">
+                        {{ verb }}
+                        <span class="word-count-circle" *ngIf="verbUsage[i] > 0">{{ verbUsage[i] }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="word-category">
+                <h3>Adverbs</h3>
+                <div class="word-list adverbs">
+                    <div *ngFor="let adv of adverbs; let i = index" draggable="true" (dragstart)="onDragStart($event, adv, 'adverb')"
+                        [ngStyle]="{'background-color': '#FFD700', 'position': 'relative'}">
+                        {{ adv }}
+                        <span class="word-count-circle" *ngIf="adverbUsage[i] > 0">{{ adverbUsage[i] }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
